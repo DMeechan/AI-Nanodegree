@@ -1,12 +1,11 @@
 from utils import *
 
+all_digits = '123456789'
 
-def grid_values(input):
-    all_digits = '123456789'
-
-    if (len(input) == 81):
+def grid_values(grid):
+    if (len(grid) == 81):
         values = []
-        for letter in input:
+        for letter in grid:
             if (letter == '.'):
                 values.append(all_digits)
             else:
@@ -32,8 +31,6 @@ def eliminate(values):
 
 
 def only_choice(values):
-    all_digits = '123456789'
-
     for unit in unitlist:
         for digit in all_digits:
             boxes_containing_digit = []
