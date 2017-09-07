@@ -26,23 +26,17 @@ def run():
     # Input which has a twins in it
     input5 = '1.4.9..68956.18.34..84.695151X....868.Y6...1264Z.8..97781923645495.6.823.6Z854179'
 
-    input_dict = grid_values(input5)
-    # print("Grid values: ", grid_values(input))
+    input_value = input4
 
     # print("raw:")
-    # display(input_dict)
+    # display(grid_values(input_value))
 
-    eliminated_values = eliminate(input_dict)
-    print("Eliminated:")
-    display(eliminated_values)
-
-    eliminatedTwins_values = eliminateTwins(eliminated_values)
-    print("Eliminated Twins:")
-    display(eliminatedTwins_values)
-
-    # search_values = search(input_dict)
-    # print('Searched puzzle: ', search_values)
-    # display(search_values)
+    solved = only_choice(grid_values(input_value))
+    # solved = solve(input_value)
+    if solved:
+        display(solved)
+    else:
+        print(solved)
 
 
 def assign_value(values, box, value):
@@ -60,21 +54,6 @@ def assign_value(values, box, value):
     if len(value) == 1:
         assignments.append(values.copy())
     return values
-
-
-def naked_twins(values):
-    """Eliminate values using the naked twins strategy.
-    Args:
-        values(dict): a dictionary of the form {'box_name': '123456789', ...}
-
-    Returns:
-        the values dictionary with the naked twins eliminated from peers.
-    """
-
-    # Find all instances of naked twins
-    # Eliminate the naked twins as possibilities for their peers
-    return values
-
 
 def cross(A, B):
     "Cross product of elements in A and elements in B."
@@ -131,107 +110,43 @@ def eliminate(values):
 
     return values
 
-
-def eliminateTwins2(values):
+def naked_twins(values):
     # If a value is 2 chars long, look for a matching pair
     # So that pair can be removed from their unit's peers
 
     possible_pairs = [box for box in values.keys() if len(values[box]) == 2]
 
-    validPairs = []
-    unitType = 1
-
-    ###
-    # Iterate through unitType = 0, 1, 2 to check all pairs for matches in rows, columns, and squares
-    ###
-
-    units = [2]
-
-    for unitType in units:
-
-        ###
-        # Find all valid pairs within the same unit
-        ###
-
-        for pair in possible_pairs:
-            # Find pairs with  one matching pair within that unit
-
-            matching_unit_pairs = ([box for box in getUnitPeersOfBox(
-                unitType, pair) if values[box] == values[pair]])
-            matching_unit_pairs.append(pair)
-
-            if len(matching_unit_pairs) == 2:
-                pairA = matching_unit_pairs[0]
-                pairB = matching_unit_pairs[1]
-
-                validPairs.append([pairA, pairB])
-                # print('PairA: ' + pairA + ' -> ' + values[pairA] + ' PairB: ' + pairB + ' -> ' + values[pairB])
-
-        ###
-        # Remove duplicates
-        ###
-
-        validPairs = remove_duplicates(validPairs)
-        print('Valid pairs for unit: ' + str(unitType) + ': ' + str(validPairs))
-
-        ###
-        # Remove those pairs from their peers in the same unit
-        ###
-
-        for pair in validPairs:
-            pair_unit_peers = [peer for peer in getUnitPeersOfBox(
-                unitType, pair[0]) if len(values[peer]) > 2]
-            # print('Matching peers for unit: ' + str(unitType) + ': ' + str(pair_unit_peers))
-
-            for peer in pair_unit_peers:
-                peer_value = values[peer]
-
-                for char in values[pair[0]]:
-                    peer_value = peer_value.replace(char, '')
-                assign_value(values, peer, peer_value)
-
-    return values
-    # print("Pairs: ", validPairs)
-
-
-def eliminateTwins(values):
-    possible_pairs = [box for box in values.keys() if len(values[box]) == 2]
-    seen = set()
-    unitType = 1
-
     # Go through every box containing 2 values
     for pair in possible_pairs:
 
-        pair_value = values[pair]
+        # Go through unitTypes 0, 1, 2 to check units for: rows, columns, and squares
+        for unitType in range(3):
+            pair_value = values[pair]
 
-        # Check that the box's corresponding pair hasn't already been processed; since their peers are the same (efficiency)
-        # if pair_value not in seen:
+            # Check that the box's corresponding pair hasn't already been processed; since their peers are the same (efficiency)
+            # if pair_value not in seen:
 
-        # Check that only 2 boxes in the same unit share the same values
-        matching_unit_pairs_len = len([box for box in getUnitPeersOfBox(
-        unitType, pair) if values[box] == pair_value])
+            # Check that only 2 boxes in the same unit share the same values
+            matching_unit_pairs_len = len([box for box in getUnitPeersOfBox(unitType, pair) if values[box] == pair_value])
 
-        # print("Len of matching pairs for: " + str(pair) + " is :" + str(matching_unit_pairs_len))
-        if matching_unit_pairs_len == 1:
-            seen.add(pair_value)
+            if matching_unit_pairs_len == 1:
 
-            # Get all eligible peers of the pair
-            pair_unit_peers = [peer for peer in getUnitPeersOfBox(
-                unitType, pair) if len(values[peer]) > 2]
-            print('Pair: ' + pair + ' with value: ' + pair_value)
-            print(pair_unit_peers)
+                # Get all eligible peers of the pair
+                pair_unit_peers = [peer for peer in getUnitPeersOfBox(unitType, pair) if len(values[peer]) > 2]
 
-            # Iterate through all peers and remove the digits found in the
-            # pair
-            for peer in pair_unit_peers:
-                peer_value = values[peer]
-                # print('Peer ' + peer + ' value before: ' + peer_value + ' for pair ' + pair_value)
+                # Iterate through all peers and remove the digits found in the pair
+                for peer in pair_unit_peers:
+                    peer_value = values[peer]
+                    # print('Peer ' + peer + ' value before: ' + peer_value + ' for pair ' + pair_value)
 
-                for char in pair_value:
-                    peer_value = peer_value.replace(char, '')
-                assign_value(values, peer, peer_value)
+                    for char in pair_value:
+                        peer_value = peer_value.replace(char, '')
 
-                # print('Peer ' + peer + ' value after: ' + peer_value)
+                    # Check if the value has changed before appending
+                    if peer_value != values[peer]:
+                        assign_value(values, peer, peer_value)   
+
+                    # print('Peer ' + peer + ' value after: ' + peer_value)
 
     return values
 
@@ -254,17 +169,6 @@ def getUnitPeersOfBox(unitType, box):
         print("Error: unitType: " + unitType +
               " is invalid. Please use value between 0 and 2.")
         return []
-
-
-def remove_duplicates(array_2D):
-    newArray = []
-    seen = set()
-    for pairA, pairB in array_2D:
-        if pairA not in seen:
-            newArray.append([pairA, pairB])
-            seen.add(pairB)
-    return newArray
-
 
 def only_choice(values):
     for unit in unitlist:
@@ -307,15 +211,29 @@ def reduce_puzzle(values):
 
 
 def search(values):
+    original_values = values.copy()
     # First reduce the puzzle using Elimination and Only Choice:
     values = reduce_puzzle(values)
 
     if values is False:
-        return False
+        # It may be returning false because the puzzle can't be solved with diagonal units
+        # Attempt to solve without diagonal units
+        print('Puzzle wasn\'t solvable using diagonal units')
+        print('Attempting to solve puzzle without diagonal units...')
+        useDiagonals(False)
 
-     # Solved!
+        values = reduce_puzzle(original_values)
+
+        if values is False:
+            print('Puzzle not solvable.')
+            return False
+
     if all(len(values[box]) == 1 for box in values.keys()):
+        # Solved!
         return values
+
+    # Use Naked Twins to simplify the puzzle
+    values = naked_twins(values)
 
     # Find an incomplete square with the fewest options
     incomplete_boxes = [box for box in values.keys() if len(values[box]) > 1]
@@ -341,12 +259,10 @@ def search(values):
 
         if attempt:
             return attempt
-
     return False
 
 
 def solve(grid):
-    values = grid_values(grid)
     """
     Find the solution to a Sudoku grid.
     Args:
@@ -355,6 +271,13 @@ def solve(grid):
     Returns:
         The dictionary representation of the final sudoku grid. False if no solution exists.
     """
+
+    # Start out trying to solve the puzzle with diagonal units
+    useDiagonals(True)
+
+    values = grid_values(grid)
+    values = search(values)
+
     return values
 
 
@@ -371,7 +294,6 @@ def runTests():
     except:
         print('We could not visualize your board due to a pygame issue. Not a problem! It is not a requirement.')
 
-
 if __name__ == '__main__':
-    # runTests()
-    run()
+    runTests()
+    # run()
