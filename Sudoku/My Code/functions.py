@@ -2,6 +2,7 @@ from utils import *
 
 all_digits = '123456789'
 
+
 def grid_values(grid):
     if (len(grid) == 81):
         values = []
@@ -13,7 +14,7 @@ def grid_values(grid):
         assert (len(values) == 81)
         zippedOutput = zip(boxes, values)
         output = dict(zippedOutput)
-
+ 
         return output
 
 
@@ -116,3 +117,4 @@ input_dict = grid_values(input2)
 
 search_values = search(input_dict)
 print('Searched puzzle: ', search_values)
+display(search_values)
