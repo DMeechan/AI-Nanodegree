@@ -19,6 +19,7 @@ class IsolationTest(unittest.TestCase):
         self.player1 = "Player1"
         self.player2 = "Player2"
         self.game = isolation.Board(self.player1, self.player2)
+        print('hello world')
 
 
 if __name__ == '__main__':

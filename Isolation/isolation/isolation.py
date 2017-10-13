@@ -340,3 +340,23 @@ class Board(object):
             move_history.append(list(curr_move))
 
             self.apply_move(curr_move)
+
+# class Player():
+#     def __init__(self):
+#         pass
+
+#     def get_move(self):
+#         return []
+
+# class AI(Player):
+#     def get_move(self):
+#         return []
+
+# class Human(Player):
+#     def get_move(self):
+#         return []
+
+# AI = AI()
+# HUMAN = Human()
+# GAME = Board(AI, HUMAN)
+# GAME.play()

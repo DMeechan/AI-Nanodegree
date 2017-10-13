@@ -209,11 +209,52 @@ class MinimaxPlayer(IsolationPlayer):
                 each helper function or else your agent will timeout during
                 testing.
         """
+
+        def terminal_test(game):
+            return not bool(game.get_legal_moves())
+
+        def max_value(game):
+            # Return a loss (-1) if the game is over
+            # Else give max value for all legal nodes
+            if terminal_test(game):
+                return -1
+            value = float("-inf")
+            for move in game.get_legal_moves():
+                value = max(value, min_value(game.forecast_move(move)))
+            return value
+
+        def min_value(game):
+            # Return a win if the game is over
+            # Else give min value for all legal nodes
+            if terminal_test(game):
+                return 1
+            value = float("inf")
+            for move in game.get_legal_moves():
+                value = min(value, max_value(game.forecast_move(move)))
+            return value
+
+        def get_minimax_decision(game):
+            """ Return the move along a branch of the game tree that
+            has the best possible value.  A move is a pair of coordinates
+            in (column, row) order corresponding to a legal move for
+            the searching player.
+            
+            Ignoring the special case of calling this function
+            from a terminal state.
+            """
+            best_score = float("-inf")
+            best_move = None
+            for move in game.get_legal_moves():
+                new_score = max(best_score, min_value(game.forecast_move(game)))
+                if new_score > best_score:
+                    best_score = new_score
+                    best_move = move
+            return best_move
+        
         if self.time_left() < self.TIMER_THRESHOLD:
             raise SearchTimeout()
 
-        # TODO: finish this function!
-        raise NotImplementedError
+        return get_minimax_decision(game)
 
 
 class AlphaBetaPlayer(IsolationPlayer):
