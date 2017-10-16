@@ -44,7 +44,7 @@ def custom_score(game, player):
     my_moves = len(game.get_legal_moves())
     opponent_moves = len(game.get_legal_moves(opponent))
 
-    return my_moves - (2 * opponent_moves)
+    return float(my_moves - (2 * opponent_moves))
 
 
 def custom_score_2(game, player):
@@ -79,7 +79,7 @@ def custom_score_2(game, player):
     my_moves = len(game.get_legal_moves())
     opponent_moves = len(game.get_legal_moves(opponent))
 
-    return my_moves - opponent_moves
+    return float(my_moves - opponent_moves)
 
 
 def custom_score_3(game, player):
@@ -113,7 +113,7 @@ def custom_score_3(game, player):
         return float("inf")
 
     # Find how many legal moves we have available
-    return len(game.get_legal_moves())
+    return float(len(game.get_legal_moves()))
 
 
 class IsolationPlayer:
@@ -348,8 +348,13 @@ class AlphaBetaPlayer(IsolationPlayer):
 
         try:
             # The try/except block will automatically catch the exception
-            # raised when the timer is about to expire.
-            # NOTE: Should the initial depth be 1 or 0?
+            # raised when the timer is about to expire
+
+            # depth_level = 1
+            # while depth_level < self.search_depth:
+            #     best_move = self.alphabeta(game, depth_level)
+            #     depth_level += 1
+
             for depth_level in range(1, self.search_depth):
                 best_move = self.alphabeta(game, depth_level)
 
@@ -441,7 +446,6 @@ class AlphaBetaPlayer(IsolationPlayer):
             
         if depth == 0:
             return True
-        return not bool(game.get_legal_moves())
 
     def max_value(self, game, depth, alpha, beta):
         if self.terminal_test(game, depth):
