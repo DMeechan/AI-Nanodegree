@@ -44,7 +44,18 @@ def custom_score(game, player):
     my_moves = len(game.get_legal_moves())
     opponent_moves = len(game.get_legal_moves(opponent))
 
-    return float(my_moves - (2 * opponent_moves))
+    # Score: 65%
+    # return float(my_moves - (2 * opponent_moves))
+
+    # Score: 66%
+    # return float(my_moves - (opponent_moves ** 2))
+
+    # Opponent's moves are weighted exponentially
+    # So the nodes where the opponent has many possible moves
+    # Are weighted much more negatively
+
+    # Score: 74%
+    return float(my_moves - (opponent_moves ** 1.5))
 
 
 def custom_score_2(game, player):
@@ -79,7 +90,16 @@ def custom_score_2(game, player):
     my_moves = len(game.get_legal_moves())
     opponent_moves = len(game.get_legal_moves(opponent))
 
-    return float(my_moves - opponent_moves)
+    # Score: 63%
+    # return float(my_moves - opponent_moves)
+
+    # Both players' moves counts are weighted exponentially
+    # With the opponent's moves being weighted more heavily
+    # Using indices means nodes with notably more moves are
+    # Weighted much more heavily
+
+    # Score: 70%
+    return float((my_moves ** 2) - (opponent_moves ** 2.5))
 
 
 def custom_score_3(game, player):
@@ -112,8 +132,24 @@ def custom_score_3(game, player):
     if game.is_winner(player):
         return float("inf")
 
-    # Find how many legal moves we have available
-    return float(len(game.get_legal_moves()))
+    opponent = game.get_opponent(player)
+    my_moves = len(game.get_legal_moves())
+    opponent_moves = len(game.get_legal_moves(opponent))
+
+    # Score: 64%
+    # return float(len(game.get_legal_moves()))
+    
+    # Score: 64%
+    # return float((my_moves ** 2) - opponent_moves))
+
+    # Score: 64%
+    # return float((my_moves ** 2) - (opponent_moves ** 2))
+
+    # Opponent's moves are weighted *much* more heavily
+    # So AI will be super aggressive
+
+    # Score: 68%
+    return float((my_moves ** (1/2)) - (opponent_moves ** 2))
 
 
 class IsolationPlayer:
@@ -350,13 +386,13 @@ class AlphaBetaPlayer(IsolationPlayer):
             # The try/except block will automatically catch the exception
             # raised when the timer is about to expire
 
-            # depth_level = 1
-            # while depth_level < self.search_depth:
-            #     best_move = self.alphabeta(game, depth_level)
-            #     depth_level += 1
-
-            for depth_level in range(1, self.search_depth):
+            depth_level = 1
+            while True:
                 best_move = self.alphabeta(game, depth_level)
+                depth_level += 1
+
+            # for depth_level in range(1, self.search_depth):
+            #     best_move = self.alphabeta(game, depth_level)
 
         except SearchTimeout:
             # Handle any actions required after timeout as needed
@@ -428,7 +464,7 @@ class AlphaBetaPlayer(IsolationPlayer):
             # Get game state where player does next_move
             game_forecast = game.forecast_move(next_move)
             # Get score for game state where next_move is taken
-            next_score = self.max_value(game_forecast, depth - 1, alpha, beta)
+            next_score = self.min_value(game_forecast, depth - 1, alpha, beta)
             # Update best move & best score if current score is better
             if next_score > best_score:
                 best_move = next_move
@@ -441,13 +477,13 @@ class AlphaBetaPlayer(IsolationPlayer):
         return best_move
 
     def terminal_test(self, game, depth):
-        if self.time_left() < self.TIMER_THRESHOLD:
-            raise SearchTimeout()
-            
-        if depth == 0:
+        if depth == 0 or not game.get_legal_moves():
             return True
 
     def max_value(self, game, depth, alpha, beta):
+        if self.time_left() < self.TIMER_THRESHOLD:
+            raise SearchTimeout()
+
         if self.terminal_test(game, depth):
             return self.score(game, self)
 
@@ -464,6 +500,9 @@ class AlphaBetaPlayer(IsolationPlayer):
         return value
 
     def min_value(self, game, depth, alpha, beta):
+        if self.time_left() < self.TIMER_THRESHOLD:
+            raise SearchTimeout()
+
         if self.terminal_test(game, depth):
             return self.score(game, self)
 

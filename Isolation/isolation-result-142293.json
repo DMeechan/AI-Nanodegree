@@ -1,0 +1,17 @@
+{
+    "critiques": {
+        "680": {
+            "rubric_items": {
+                "5510": {
+                    "result": "passed",
+                    "observation": "Correct!"
+                },
+                "7303": {
+                    "autograded": true,
+                    "result": "failed",
+                    "observation": "Not all of the tests passed.\n\n```\n************************************************************************\n                         Test Failure Feedback                          \n************************************************************************\n\nFailed Test: 14. Submission includes heuristic_analysis.pdf\n----------------------------------------------------------------------\nAssertionError: False is not true : You must submit a report named heuristic_analysis.pdf for review.\n\n\nFailed Test: 15. Submission includes research_review.pdf\n----------------------------------------------------------------------\nAssertionError: False is not true : You must submit a report named research_review.pdf for review.\n\n\n************************************************************************\n                          Test Result Summary                           \n************************************************************************\n\n14. Submission includes heuristic_analysis.pdf:                        F\n15. Submission includes research_review.pdf:                           F\n\n------------------------------------------------------------------------\n            . - Test Passed    F - Test Failed    E - Error             \n\n```"
+                }
+            }
+        }
+    }
+}
