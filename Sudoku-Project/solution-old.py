@@ -98,16 +98,12 @@ def grid_values(grid):
         for letter in grid:
             if letter == '.':
                 values.append(all_digits)
-
             elif letter == 'X':
                 values.append('2379')
-
             elif letter == 'Y':
                 values.append('379')
-
             elif letter == 'Z':
                 values.append('23')
-
             else:
                 values.append(letter)
 
@@ -147,7 +143,6 @@ def only_choice(values):
         print('After only choice')
         display(values)
     return values
-
 
 def reduce_puzzle(values):
     stalled = False
