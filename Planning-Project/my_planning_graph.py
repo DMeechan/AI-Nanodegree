@@ -403,13 +403,6 @@ class PlanningGraph():
             return False
         return True
 
-    def are_action_effects_mutex(action_effects_node_1, action_effects_node_2) -> bool:
-        for effect in action_effects_node_1:
-            if effect in action_effects_node_2:
-                return True
-        return False
-
-
     def inconsistent_effects_mutex(self, node_a1: PgNode_a, node_a2: PgNode_a) -> bool:
         """
         Test a pair of actions for inconsistent effects, returning True if
@@ -562,18 +555,30 @@ class PlanningGraph():
         # for each goal in the problem, determine the level cost, then add them together
 
         level_sum = 0
+        goals = self.problem.goal
+        state_levels_length = len(self.s_levels)
+
         # Go through all the goals
         # And all the levels
         # And all the states in those levels
         # And if the goal is found in the state, increment the level costs sum
-        for goal in self.problem.goal:
+        for goal in goals:
             goal_found = False
-            for level in range(len(self.s_levels)):
+            goal_node = PgNode_s(goal, True)
+            for level in range(state_levels_length):
                 for state in self.s_levels[level]:
-                    if goal == state.literal:
+                    if goal_node == state:
                         goal_found = True
-                        level_sum += 1
+                        level_sum += level
                         break
                 if goal_found:
                     break
         return level_sum
+
+def are_action_effects_mutex(action_effects_node_1, action_effects_node_2) -> bool:
+    """ Take in 2 effects of action nodes and return whether they're mutex
+    """
+    for effect in action_effects_node_1:
+        if effect in action_effects_node_2:
+            return True
+    return False

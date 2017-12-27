@@ -222,9 +222,15 @@ class AirCargoProblem(Problem):
         conditions by ignoring the preconditions required for an action to be
         executed.
         """
-        # TODO implement (see Russell-Norvig Ed-3 10.2.3  or Russell-Norvig Ed-2 11.2)
-        count = 0
-        return count
+        knowledge_base = PropKB()
+        knowledge_base.tell(decode_state(node.state, self.state_map).pos_sentence())
+        knowledge_base_goals = knowledge_base.clauses
+        goals = self.goal
+        actions_count = 0
+        for goal in goals:
+            if goal not in knowledge_base_goals:
+                actions_count += 1
+        return actions_count
 
 
 def air_cargo_p1() -> AirCargoProblem:
@@ -283,7 +289,6 @@ def air_cargo_p2() -> AirCargoProblem:
 
 
 def air_cargo_p3() -> AirCargoProblem:
-    # TODO implement Problem 3 definition
     cargos = ['C1', 'C2', 'C3', 'C4']
     planes = ['P1', 'P2']
     airports = ['JFK', 'SFO', 'ATL', 'ORD']
