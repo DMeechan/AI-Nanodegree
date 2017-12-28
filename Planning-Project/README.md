@@ -177,6 +177,6 @@ This process will create a zipfile in your top-level directory named cargo_plann
 The exercises in this project can take a *long* time to run (from several seconds to a several hours) depending on the heuristics and search algorithms you choose, as well as the efficiency of your own code.  (You may want to stop and profile your code if runtimes stretch past a few minutes.) One option to improve execution time is to try installing and using [pypy3](http://pypy.org/download.html) -- a python JIT, which can accelerate execution time substantially.  Using pypy is *not* required (and thus not officially supported) -- an efficient solution to this project runs in very reasonable time on modest hardware -- but working with pypy may allow students to explore more sophisticated problems than the examples included in the project.
 
 
-Commands to perform all searches and record data output in separate files:
-
-python run_search.py -p 1 -s 1 3 5 7 >> uninformed_results_p1.txt && python run_search.py -p 2 -s 1 3 5 7 >> uninformed_results_p2.txt && python run_search.py -p 3 -s 1 3 5 7 >> uninformed_results_p3.txt && python run_search.py -p 1 -s 8 9 10 >> informed_results_p1.txt && python run_search.py -p 2 -s 8 9 10 >> informed_results_p2.txt && python run_search.py -p 3 -s 8 9 10 >> informed_results_p3.txt
+Run the following script to perform all searches and record data output in the `results` folder:
+`source get_results.sh`
+Note: be sure to be using the `aind` Anaconda environment in your current Terminal before running that command!
