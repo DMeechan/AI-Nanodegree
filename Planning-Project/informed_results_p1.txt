@@ -1,0 +1,42 @@
+
+Solving Air Cargo Problem 1 using astar_search with h_1...
+
+Expansions   Goal Tests   New Nodes
+    55          57         224    
+
+Plan length: 6  Time elapsed in seconds: 0.032742987998062745
+Load(c, p, a)
+Load(c, p, a)
+Fly(P1, SFO, JFK)
+Fly(P2, JFK, SFO)
+Unload(c, p, a)
+Unload(c, p, a)
+
+
+Solving Air Cargo Problem 1 using astar_search with h_ignore_preconditions...
+
+Expansions   Goal Tests   New Nodes
+    41          43         170    
+
+Plan length: 6  Time elapsed in seconds: 0.03126666499883868
+Load(c, p, a)
+Fly(P1, SFO, JFK)
+Unload(c, p, a)
+Load(c, p, a)
+Fly(P2, JFK, SFO)
+Unload(c, p, a)
+
+
+Solving Air Cargo Problem 1 using astar_search with h_pg_levelsum...
+
+Expansions   Goal Tests   New Nodes
+    11          13          50    
+
+Plan length: 6  Time elapsed in seconds: 0.9317408049973892
+Load(c, p, a)
+Fly(P1, SFO, JFK)
+Load(c, p, a)
+Fly(P2, JFK, SFO)
+Unload(c, p, a)
+Unload(c, p, a)
+
