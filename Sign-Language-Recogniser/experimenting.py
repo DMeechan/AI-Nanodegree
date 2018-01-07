@@ -30,15 +30,34 @@ DF_MEANS = DATAFRAME.groupby('speaker').mean()
 # Find the standard deviation grouped by speaker
 DF_STD = DATAFRAME.groupby('speaker').std()
 
-features_norm = ['norm-rx', 'norm-ry', 'norm-lx','norm-ly']
-features_pos = ['right-x', 'right-y', 'left-x', 'left-y']
+# FIND NORMALIZED CATESIAN COORDINATES
+# features_norm = ['norm-rx', 'norm-ry', 'norm-lx','norm-ly']
+# features_pos = ['right-x', 'right-y', 'left-x', 'left-y']
 
-for index, value in enumerate(features_norm):
-    feature = features_pos[index]
-    mean = DATAFRAME['speaker'].map(DF_MEANS[feature], na_action=None)
-    std = DATAFRAME['speaker'].map(DF_STD[feature], na_action=None)
-    z_score = (DATAFRAME[feature] - mean) / std
-    DATAFRAME[value] = z_score
+# for index, value in enumerate(features_norm):
+#     feature = features_pos[index]
+#     mean = DATAFRAME['speaker'].map(DF_MEANS[feature], na_action=None)
+#     std = DATAFRAME['speaker'].map(DF_STD[feature], na_action=None)
+#     z_score = (DATAFRAME[feature] - mean) / std
+#     DATAFRAME[value] = z_score
+
+# FIND POLAR COORDINATES
+features_polar = ['polar-rr', 'polar-rtheta', 'polar-lr', 'polar-ltheta']
+features_ground = ['grnd-rx','grnd-ry','grnd-lx','grnd-ly']
+
+for index, feature in enumerate(features_polar):
+    if index % 2 == 1:
+        # Index is odd; therefore the feature is for an angle
+        x_value = DATAFRAME[features_ground[index - 1]]
+        y_value = DATAFRAME[features_ground[index]]
+        DATAFRAME[feature] = np.arctan2(x_value, y_value)
+    else:
+        # Index is even; therefore the feature is for a radius
+        x_value = DATAFRAME[features_ground[index]]
+        y_value = DATAFRAME[features_ground[index + 1]]
+        DATAFRAME[feature] = np.hypot(x_value, y_value)
+        
+DATAFRAME.head()
 
 # Display first five rows of database, indexed by video and frame
 HEAD = DATAFRAME.head()
