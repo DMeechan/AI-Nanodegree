@@ -10,7 +10,6 @@ from asl_utils import combine_sequences
 # Hide divide by zero error
 np.seterr(divide='ignore')
 
-
 class ModelSelector(object):
     '''
     base class for model selection (strategy design pattern)
@@ -183,7 +182,12 @@ class SelectorCV(ModelSelector):
     def select(self):
         warnings.filterwarnings("ignore", category=DeprecationWarning)
 
-        num_splits = 3
+        # Choose whatever's smallest between 3 and the size of the sequence
+        # So we can maximise the number of splits
+        size = len(self.sequences)
+        # But make sure min_size has a size of at least 2:
+        min_size = 2 if size < 2 else size
+        num_splits = min(3, min_size)
         kf = KFold(n_splits = num_splits, shuffle = False, random_state = None)
 
         highest_score = float("-inf")

@@ -7,6 +7,8 @@ from hmmlearn.hmm import GaussianHMM
 from sklearn.model_selection import KFold
 from asl_utils import combine_sequences
 
+# Hide divide by zero error
+np.seterr(divide='ignore')
 
 class ModelSelector(object):
     '''
@@ -76,7 +78,7 @@ class SelectorBIC(ModelSelector):
     Equation becomes:
     score = -2 * log (likelihood) + num free parameters * log (num data points)
 
-    Lower score = bettre model
+    Lower score = better model
 
     """
 
@@ -95,12 +97,16 @@ class SelectorBIC(ModelSelector):
             try:
                 model = self.base_model(num_states)
                 log_likelihood = model.score(self.X, self.lengths)
-                num_data_points = len(self.X)
-                # num_data_points = sum(self.lengths)
-                num_free_paramaters = (num_states ** 2) + (2 * num_data_points * num_states) - 1
-                log_n = np.log(num_data_points)
 
-                score = -2 * log_likelihood + num_free_paramaters * log_n
+                # N = number of data points; f = number of features
+                N, f = self.X.shape
+                log_n = np.log(N)
+                # N = len(self.X)
+
+                # Number of free parameters: p = m^2 + 2mf-1
+                p = (num_states ** 2) + 2 * num_states * f - 1
+
+                score = -2 * log_likelihood + p * log_n
 
                 if score < lowest_score:
                     lowest_score = score
@@ -176,7 +182,12 @@ class SelectorCV(ModelSelector):
     def select(self):
         warnings.filterwarnings("ignore", category=DeprecationWarning)
 
-        num_splits = 2
+        # Choose whatever's smallest between 3 and the size of the sequence
+        # So we can maximise the number of splits
+        size = len(self.sequences)
+        # But make sure min_size has a size of at least 2:
+        min_size = 2 if size < 2 else size
+        num_splits = min(3, min_size)
         kf = KFold(n_splits = num_splits, shuffle = False, random_state = None)
 
         highest_score = float("-inf")

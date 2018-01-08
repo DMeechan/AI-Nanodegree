@@ -3,6 +3,8 @@ import os
 import numpy as np
 import pandas as pd
 
+# Hide divide by zero error
+np.seterr(divide='ignore')
 
 class AslDb(object):
     """ American Sign Language database drawn from the RWTH-BOSTON-104 frame positional data

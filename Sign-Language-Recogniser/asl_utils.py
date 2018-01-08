@@ -2,6 +2,9 @@ from asl_data import SinglesData, WordsData
 import numpy as np
 from IPython.core.display import display, HTML
 
+# Hide divide by zero error
+np.seterr(divide='ignore')
+
 RAW_FEATURES = ['left-x', 'left-y', 'right-x', 'right-y']
 GROUND_FEATURES = ['grnd-rx', 'grnd-ry', 'grnd-lx', 'grnd-ly']
 
