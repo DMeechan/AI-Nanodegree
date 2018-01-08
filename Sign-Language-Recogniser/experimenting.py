@@ -18,6 +18,9 @@ DATAFRAME['grnd-ly'] = DATAFRAME['left-y'] - DATAFRAME['nose-y']
 DATAFRAME['grnd-lx'] = DATAFRAME['left-x'] - DATAFRAME['nose-x']
 FEATURES_GROUND = ['grnd-ry', 'grnd-rx', 'grnd-ly', 'grnd-lx']
 
+a = c = "10"
+print(a)
+
 # Extract the ground features for a single frame
 # FRAME_FEATURES_GROUND = [DATAFRAME.ix[98, 1][feature] for feature in FEATURES_GROUND]
 
