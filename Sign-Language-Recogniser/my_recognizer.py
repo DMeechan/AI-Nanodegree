@@ -1,7 +1,6 @@
 import warnings
 from asl_data import SinglesData
 
-
 def recognize(models: dict, test_set: SinglesData):
     """ Recognize test word sequences from word models set
 

@@ -7,6 +7,9 @@ from hmmlearn.hmm import GaussianHMM
 from sklearn.model_selection import KFold
 from asl_utils import combine_sequences
 
+# Hide divide by zero error
+np.seterr(divide='ignore')
+
 
 class ModelSelector(object):
     '''

@@ -8,6 +8,9 @@ from hmmlearn.hmm import GaussianHMM
 import math
 from matplotlib import (cm, pyplot as plt, mlab)
 
+# Hide divide by zero error
+np.seterr(divide='ignore')
+
 # Initialise the database
 ASL = AslDb()
 DATAFRAME = ASL.df

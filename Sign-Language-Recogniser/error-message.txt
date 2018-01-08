@@ -1,4 +1,9 @@
-I couldn't figure out how to get rid of an error: '/anaconda/lib/python3.6/site-packages/hmmlearn/base.py:459: RuntimeWarning: divide by zero encountered in log
-np.log(self.startprob_)' when running code using hmmlearn inside Jupyter. I did not encounter this error when running the same code in Terminal within the AIND Anaconda environment.
+I couldn't figure out how to get rid of an error: '/anaconda/lib/python3.6/site-packages/hmmlearn/base.py:459: RuntimeWarning: divide by zero encountered in log np.log(self.startprob_)' when running code using hmmlearn inside Jupyter. I did not encounter this error when running the same code in Terminal within the AIND Anaconda environment.
 
 Other than the message spamming the output logs inside Jupyter, my code passed all tests, didn't produce the same error messages when run in Terminal, and did work fine in Jupyter (you just need to scroll to the very bottom of the output logs in some cases). Thanks!
+
+
+NOTE TO SELF: CAN HIDE THIS BY:
+```
+np.seterr(divide='ignore')
+```
