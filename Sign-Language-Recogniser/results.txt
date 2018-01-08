@@ -1,0 +1,19 @@
+ground:
+    SelectorBIC 0.63
+    SelectorDIC 0.57
+    SelectorCV 0.57
+
+norm:
+    SelectorBIC 0.66
+    SelectorDIC 0.62
+    SelectorCV 0.65
+
+polar:
+    SelectorBIC 0.64
+    SelectorDIC 0.53
+    SelectorCV 0.65
+
+delta:
+    SelectorBIC 0.61
+    SelectorDIC 0.64
+    SelectorCV 0.65
