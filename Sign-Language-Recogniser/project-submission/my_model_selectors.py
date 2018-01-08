@@ -96,17 +96,17 @@ class SelectorBIC(ModelSelector):
         for num_states in range(self.min_n_components, self.max_n_components + 1):
             try:
                 model = self.base_model(num_states)
-                log_likelihood = model.score(self.X, self.lengths)
+                log_l = model.score(self.X, self.lengths)
 
                 # N = number of data points; f = number of features
                 N, f = self.X.shape
                 log_n = np.log(N)
-                # N = len(self.X)
 
                 # Number of free parameters: p = m^2 + 2mf-1
                 p = (num_states ** 2) + 2 * num_states * f - 1
 
-                score = -2 * log_likelihood + p * log_n
+                # Calculate BIC score
+                score = -2 * log_l + p * log_n
 
                 if score < lowest_score:
                     lowest_score = score
@@ -116,10 +116,7 @@ class SelectorBIC(ModelSelector):
                 print('Hit an exception. We shall venture forth into the unknown: ', e)
                 pass
 
-        if best_model:
-            return best_model
-        else:
-            return self.base_model(self.n_constant)
+        return best_model if best_model else self.base_model(self.n_constant)
 
         # DONE: implement model selection based on BIC scores
 

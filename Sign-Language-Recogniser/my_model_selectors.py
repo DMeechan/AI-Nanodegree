@@ -113,7 +113,8 @@ class SelectorBIC(ModelSelector):
                     best_model = model
 
             except Exception as e:
-                continue
+                print('Hit an exception. We shall venture forth into the unknown: ', e)
+                pass
 
         return best_model if best_model else self.base_model(self.n_constant)
 
