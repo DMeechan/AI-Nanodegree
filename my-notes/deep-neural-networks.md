@@ -1,0 +1,1 @@
+What does a neural network do? It effectively finds the best line to separate data on a graph
