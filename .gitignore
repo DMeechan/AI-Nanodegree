@@ -1,4 +1,5 @@
 private/
+test-photos/*
 *.pem
 
 # Byte-compiled / optimized / DLL files
