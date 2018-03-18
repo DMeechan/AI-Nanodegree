@@ -7,4 +7,5 @@ saved_models/weights.best.vgg16.hdf5
 .ipynb_checkpoints/
 bottleneck_features/
 my_test_images/
-
+project-submission/test-photos/*
+project-submission.zip
