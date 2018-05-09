@@ -5,8 +5,9 @@ from keras.layers import Dense
 from keras.layers import LSTM
 import keras
 
+import string
 
-# TODO: fill out the function below that transforms the input series 
+# DONE: fill out the function below that transforms the input series 
 # and window-size into a set of input/output pairs for use with our RNN model
 def window_transform_series(series, window_size):
     # containers for input/output pairs
@@ -38,22 +39,44 @@ def window_transform_series(series, window_size):
 
     return X,y
 
-# TODO: build an RNN to perform regression on our time series input/output data
+# DONE: build an RNN to perform regression on our time series input/output data
 def build_part1_RNN(window_size):
-    pass
+    model = Sequential()
+    model.add(LSTM(units=5, activation='tanh', input_shape=(window_size, 1)))
+    model.add(Dense(1))
+    return model
 
 
-### TODO: return the text input with only ascii lowercase and the punctuation given below included.
+### DONE: return the text input with only ascii lowercase and the punctuation given below included.
 def cleaned_text(text):
-    punctuation = ['!', ',', '.', ':', ';', '?']
+    # punctuation = ['!', ',', '.', ':', ';', '?']
+    translation_table = str.maketrans('', '', string.punctuation)
+    text = text.translate(translation_table)
 
     return text
 
-### TODO: fill out the function below that transforms the input text and window-size into a set of input/output pairs for use with our RNN model
+### DONE: fill out the function below that transforms the input text and window-size into a set of input/output pairs for use with our RNN model
 def window_transform_text(text, window_size, step_size):
     # containers for input/output pairs
     inputs = []
     outputs = []
+
+    length = len(text)
+    for starting_index in range(0, length, step_size):
+        items = []
+        for increment in range(0, window_size):
+            index = starting_index + increment
+            if index < length:
+                item = text[index]
+                items.append(item)
+            else:
+                break
+
+        if len(items) == window_size:
+            inputs.append(items)
+            output_index = starting_index + window_size
+            if output_index < length:
+                outputs.append([text[output_index]])
 
     return inputs,outputs
 
