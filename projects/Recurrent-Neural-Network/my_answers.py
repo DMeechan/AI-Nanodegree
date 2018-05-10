@@ -16,16 +16,14 @@ def window_transform_series(series, window_size):
     # containers for input/output pairs
     X = []
     y = []
-
     length = len(series)
-    for starting_index in range(0, length - window_size):
-        items = [series[starting_index + increment] for increment in range(0, window_size) if (starting_index + increment) < length]
-        
-        if len(items) == window_size:
-            output_index = starting_index + window_size
-            if output_index < length:
-                X.append(items)
-                y.append(series[output_index])
+    
+    for index in range(0, length - window_size):
+        input_items = series[index: index + window_size]
+        X.append(input_items)
+
+        output_item = series[index + window_size]
+        y.append(output_item)
 
     # reshape each
     X = np.asarray(X)
@@ -71,16 +69,13 @@ def window_transform_text(text, window_size, step_size):
     # containers for input/output pairs
     inputs = []
     outputs = []
-
     length = len(text)
-    for starting_index in range(0, length - window_size, step_size):
-        items = [text[starting_index + increment] for increment in range(0, window_size) if (starting_index + increment) < length]
 
-        if len(items) == window_size:
-            output_index = starting_index + window_size
-            if output_index < length:
-                inputs.append(items)
-                outputs.append(text[output_index])
+    for index in range(0, length - window_size, step_size):
+        input_items = text[index : index + window_size]
+        inputs.append(input_items)
+        output_item = text[index + window_size]
+        outputs.append(output_item)
 
     return inputs, outputs
 
