@@ -8,39 +8,36 @@ import keras
 
 import string
 
-# DONE: fill out the function below that transforms the input series 
+# DONE: fill out the function below that transforms the input series
 # and window-size into a set of input/output pairs for use with our RNN model
+
+
 def window_transform_series(series, window_size):
     # containers for input/output pairs
     X = []
     y = []
 
     length = len(series)
-    for starting_index in range(0, length):
-        items = []
-        for increment in range(0, window_size):
-            index = starting_index + increment
-            if index < length:
-                item = series[index]
-                items.append(item)
-            else:
-                break
-
+    for starting_index in range(0, length - window_size):
+        items = [series[starting_index + increment] for increment in range(0, window_size) if (starting_index + increment) < length]
+        
         if len(items) == window_size:
-            X.append(items)
             output_index = starting_index + window_size
             if output_index < length:
-                y.append([series[output_index]])
+                X.append(items)
+                y.append(series[output_index])
 
-    # reshape each 
+    # reshape each
     X = np.asarray(X)
     X.shape = (np.shape(X)[0:2])
     y = np.asarray(y)
-    y.shape = (len(y),1)
+    y.shape = (len(y), 1)
 
-    return X,y
+    return X, y
 
 # DONE: build an RNN to perform regression on our time series input/output data
+
+
 def build_part1_RNN(window_size):
     model = Sequential()
     model.add(LSTM(units=5, activation='tanh', input_shape=(window_size, 1)))
@@ -48,45 +45,53 @@ def build_part1_RNN(window_size):
     return model
 
 
-### DONE: return the text input with only ascii lowercase and the punctuation given below included.
+# DONE: return the text input with only ascii lowercase and the punctuation given below included.
 def cleaned_text(text):
-    # punctuation = ['!', ',', '.', ':', ';', '?']
-    translation_table = str.maketrans('', '', string.punctuation)
+    # Grab special characters & numbers and put them all in a string together
+    punctuation_to_keep = ['!', ',', '.', ':', ';', '?']
+
+    punctuation = ['à', 'â', 'è', 'é']
+    punctuation += ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9']
+    punctuation += ['\n', '\r', '\t', '\f']
+    punctuation += ['\u000b', '\ufeff']
+    punctuation += ['"', '#', '$', '%', '&', "'", '(', ')', '*', '+', '-', '/']
+    punctuation += ['@', '[', ']', '<', '>', '~', '^', '_', '{', '}', '|', '=', '`', '\\']
+    punctuation = ''.join(punctuation)
+
+    # Remove all the punctuation found
+    translation_table = str.maketrans(' ', ' ', punctuation)
     text = text.translate(translation_table)
 
     return text
 
-### DONE: fill out the function below that transforms the input text and window-size into a set of input/output pairs for use with our RNN model
+# DONE: fill out the function below that transforms the input text and window-size into a set of input/output pairs for use with our RNN model
+
+
 def window_transform_text(text, window_size, step_size):
     # containers for input/output pairs
     inputs = []
     outputs = []
 
     length = len(text)
-    for starting_index in range(0, length, step_size):
-        items = []
-        for increment in range(0, window_size):
-            index = starting_index + increment
-            if index < length:
-                item = text[index]
-                items.append(item)
-            else:
-                break
+    for starting_index in range(0, length - window_size, step_size):
+        items = [text[starting_index + increment] for increment in range(0, window_size) if (starting_index + increment) < length]
 
         if len(items) == window_size:
-            inputs.append(items)
             output_index = starting_index + window_size
             if output_index < length:
-                outputs.append([text[output_index]])
+                inputs.append(items)
+                outputs.append(text[output_index])
 
-    return inputs,outputs
+    return inputs, outputs
 
-# DONE build the required RNN model: 
-# a single LSTM hidden layer with softmax activation, categorical_crossentropy loss 
+# DONE build the required RNN model:
+# a single LSTM hidden layer with softmax activation, categorical_crossentropy loss
+
+
 def build_part2_RNN(window_size, num_chars):
     model = Sequential()
     input_shape = (window_size, num_chars)
-    
+
     layer_1 = LSTM(units=200, activation='tanh', input_shape=input_shape)
     layer_2 = Dense(units=num_chars)
     layer_3 = Activation('softmax')
