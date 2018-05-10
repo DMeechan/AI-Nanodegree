@@ -17,8 +17,11 @@ def window_transform_series(series, window_size):
     X = []
     y = []
     length = len(series)
-    
+
     for index in range(0, length - window_size):
+        # Run through each value in the series
+        # And extract each of the elements
+        # Between the starting index and the end of the window
         input_items = series[index: index + window_size]
         X.append(input_items)
 
@@ -38,7 +41,9 @@ def window_transform_series(series, window_size):
 
 def build_part1_RNN(window_size):
     model = Sequential()
+    # LSTM layer with 5 units
     model.add(LSTM(units=5, activation='tanh', input_shape=(window_size, 1)))
+    # Followed by a single fully-connected layer
     model.add(Dense(1))
     return model
 
@@ -48,6 +53,8 @@ def cleaned_text(text):
     # Grab special characters & numbers and put them all in a string together
     punctuation_to_keep = ['!', ',', '.', ':', ';', '?']
 
+    # Run through every possible special character that the submit tool dislikes
+    # And eliminate it
     punctuation = ['à', 'â', 'è', 'é']
     punctuation += ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9']
     punctuation += ['\n', '\r', '\t', '\f']
@@ -55,6 +62,10 @@ def cleaned_text(text):
     punctuation += ['"', '#', '$', '%', '&', "'", '(', ')', '*', '+', '-', '/']
     punctuation += ['@', '[', ']', '<', '>', '~', '^', '_', '{', '}', '|', '=', '`', '\\']
     punctuation = ''.join(punctuation)
+
+    # (note to self:
+    # it probably would have been quicker to just whitelist a few characters
+    # and only keep characters in the whitelist)
 
     # Remove all the punctuation found
     translation_table = str.maketrans(' ', ' ', punctuation)
@@ -71,6 +82,7 @@ def window_transform_text(text, window_size, step_size):
     outputs = []
     length = len(text)
 
+    # Just like in the time series window, but increment the index by the size of the step
     for index in range(0, length - window_size, step_size):
         input_items = text[index : index + window_size]
         inputs.append(input_items)
@@ -87,8 +99,15 @@ def build_part2_RNN(window_size, num_chars):
     model = Sequential()
     input_shape = (window_size, num_chars)
 
+    # Start out with an LSTM with 200 units
+    # We need to add the input shape because it's the first layer
     layer_1 = LSTM(units=200, activation='tanh', input_shape=input_shape)
+
+    # Add a fully connected layer with one node for each character
     layer_2 = Dense(units=num_chars)
+
+    # Normalize the values between 0 and 1
+    # (negative is < 0.5; positive is > 0.5)
     layer_3 = Activation('softmax')
 
     model.add(layer_1)
