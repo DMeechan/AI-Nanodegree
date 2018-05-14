@@ -1,19 +1,19 @@
 'use strict';
-var Alexa = require('alexa-sdk');
+const Alexa = require('alexa-sdk');
 var APP_ID = undefined;  // can be replaced with your app ID if publishing
-var facts = require('./facts');
-var GET_FACT_MSG_EN = [
+const facts = require('./facts');
+const GET_FACT_MSG_EN = [
     "Here's your fact: "
 ]
 // Test hooks - do not remove!
 exports.GetFactMsg = GET_FACT_MSG_EN;
-var APP_ID_TEST = "mochatest";  // used for mocha tests to prevent warning
+const APP_ID_TEST = "mochatest";  // used for mocha tests to prevent warning
 // end Test hooks
 /*
     TODO (Part 2) add messages needed for the additional intent
     TODO (Part 3) add reprompt messages as needed
 */
-var languageStrings = {
+const languageStrings = {
     "en": {
         "translation": {
             "FACTS": facts.FACTS_EN,

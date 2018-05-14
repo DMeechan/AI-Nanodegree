@@ -7,6 +7,15 @@ module.exports = {
         "In 1997, a chess-playing program named Deep Blue, developed by IBM, beat the reigning world chess champion.",
         "A so-called AI Winter occurred in 1974, when funding was cut after Speech Understanding research did not live up to its promise.",
         "A driverless robotic car named Stanley, engineered by Sebastian Thrun's Stanford Racing team, sped through the Mojave desert at 22 miles per hour to win the 2005 Darpa Grand Challenge.",
-        "Replace me and add some more facts!"
+
+
+        "Geo Omori opened the first Jiu-Jitsu school in Brazil in 1909",
+        "In 1993, Royce Gracie showed the world what Brazilian Jiu-Jitsu could do by winning the first UFC trophy.",
+        "Japanese Jiu-Jitsu  was introduced to the Gracie family in Brazil around 1914 by Esai Maeda.",
+        "In 1914, Mitsuo Maeda (also known as Count Koma – ‘Count of Combat’) emigrated from Japan to Brazil ",
+        "Carlos Gracie first opened his academy in 1925",
+        "",
+        "",
+        "",
     ]
 }

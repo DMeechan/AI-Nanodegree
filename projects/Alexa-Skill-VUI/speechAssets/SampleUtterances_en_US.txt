@@ -2,3 +2,23 @@ GetNewFactIntent a fact
 GetNewFactIntent tell me a fact
 GetNewFactIntent give me a fact
 GetNewFactIntent give me something
+
+GetNewFactIntent tell me something about BJJ
+GetNewFactIntent tell me something about Brazilian Jiu Jitsu
+GetNewFactIntent give me something about Brazilian Jiu Jitsu
+GetNewFactIntent give me something about BJJ
+
+GetNewFactIntent tell me a fact about BJJ
+GetNewFactIntent fact about BJJ
+GetNewFactIntent something about BJJ
+
+GetNewFactIntent tell me a fact about Brazilian Jiu Jitsu
+GetNewFactIntent fact about Brazilian Jiu Jitsu
+GetNewFactIntent something about Brazilian Jiu Jitsu
+
+GetNewFactIntent tell me a fact about Jiu Jitsu
+GetNewFactIntent fact about Jiu Jitsu
+GetNewFactIntent something about Jiu Jitsu
+
+
+
