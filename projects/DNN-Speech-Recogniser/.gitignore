@@ -5,3 +5,4 @@ __pycache__/
 *.tar.gz
 *.pyc
 *.json
+experimentation/deep-learning
