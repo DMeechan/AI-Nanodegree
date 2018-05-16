@@ -118,12 +118,12 @@ def deep_rnn_model(input_dim, units, recur_layers, output_dim=29):
     if recur_layers != 1:
         # Run through each of the many layers
         for i in range(recur_layers - 2):
-            layer = LSTM(units, return_sequences, activation)(batch_layer)
+            layer = LSTM(units, return_sequences=return_sequences, activation=activation)(batch_layer)
             name = 'bn_rnn_{}'.format(i + 2)
             batch_layer = BatchNormalization(name=name)(layer)
         
         # Now let's process the final layer separately
-        layer = LSTM(units, return_sequences, activation)(batch_layer)
+        layer = LSTM(units, return_sequences=return_sequences, activation=activation)(batch_layer)
         name = 'bn_rnn_last_rnn'
         batch_layer = BatchNormalization(name=name)
     
