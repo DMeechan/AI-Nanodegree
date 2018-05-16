@@ -19,6 +19,24 @@ def simple_rnn_model(input_dim, output_dim=29):
     print(model.summary())
     return model
 
+def simple_lstm_model(input_dim, output_dim=29):
+    # Use LSTM instead of simple_rnn_model
+
+    # Main acoustic input
+    input_data = Input(name='the_input', shape=(None, input_dim))
+
+    # LSTM layer
+    lstm = LSTM(output_dim, return_sequences=True, implementation=2, name='lstm')(input_data)
+
+    # Activation later
+    y_pred = Activation('softmax', name='softmax')(lstm)
+
+    # Model
+    model = Model(inputs=input_data, outputs=y_pred)
+    model.output_length = lambda x: x
+    print(model.summary())
+    return model
+
 def rnn_model(input_dim, units, activation, output_dim=29):
     """ Build a recurrent network for speech 
     """
