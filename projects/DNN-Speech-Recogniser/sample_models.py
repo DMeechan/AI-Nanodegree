@@ -26,7 +26,7 @@ def rnn_model(input_dim, units, activation, output_dim=29):
     # Main acoustic input
     input_data = Input(name='the_input', shape=(None, input_dim))
     # Add recurrent layer
-    rnn_layer = GRU(units, activation,
+    rnn_layer = GRU(units, activation=activation,
         return_sequences=True, implementation=2, name='rnn')(input_data)
 
     # DONE: Add batch normalization 
@@ -111,21 +111,21 @@ def deep_rnn_model(input_dim, units, recur_layers, output_dim=29):
     activation = 'relu'
     return_sequences = True
 
-    layer = LSTM(units, activation, return_sequences)(input_data)
+    layer = LSTM(units, activation=activation, return_sequences=return_sequences)(input_data)
     name = 'bn_rnn_1d'
-    batch_layer = BatchNormalization(name)(layer)
+    batch_layer = BatchNormalization(name=name)(layer)
 
     if recur_layers != 1:
         # Run through each of the many layers
         for i in range(recur_layers - 2):
             layer = LSTM(units, return_sequences, activation)(batch_layer)
             name = 'bn_rnn_{}'.format(i + 2)
-            batch_layer = BatchNormalization(name)(layer)
+            batch_layer = BatchNormalization(name=name)(layer)
         
         # Now let's process the final layer separately
         layer = LSTM(units, return_sequences, activation)(batch_layer)
         name = 'bn_rnn_last_rnn'
-        batch_layer = BatchNormalization(name)
+        batch_layer = BatchNormalization(name=name)
     
     # DONE: Add a TimeDistributed(Dense(output_dim)) layer
     time_dense = TimeDistributed(Dense(output_dim))(layer)
@@ -150,7 +150,7 @@ def bidirectional_rnn_model(input_dim, units, output_dim=29):
     activation = 'relu'
     merge_mode = 'concat'
 
-    lstm = LSTM(units, return_sequences, activation)
+    lstm = LSTM(units, activation=activation, return_sequences=return_sequences)
     bidir_rnn = Bidirectional(lstm, merge_mode)(input_data)
 
     # DONE: Add a TimeDistributed(Dense(output_dim)) layer
@@ -179,7 +179,7 @@ def final_model(input_dim, output_dim=29, activation='tanh'):
 
     # DONE: Add softmax activation layer
     name = 'softmax'
-    y_pred = Activation('softmax', name)(time_dense)
+    y_pred = Activation('softmax', name=name)(time_dense)
 
     # Specify the model
     model = Model(inputs=input_data, outputs=y_pred)
