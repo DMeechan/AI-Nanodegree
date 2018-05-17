@@ -125,7 +125,7 @@ def deep_rnn_model(input_dim, units, recur_layers, output_dim=29):
         # Now let's process the final layer separately
         layer = LSTM(units, return_sequences=return_sequences, activation=activation)(batch_layer)
         name = 'bn_rnn_last_rnn'
-        batch_layer = BatchNormalization(name=name)
+        batch_layer = BatchNormalization(name=name)(layer)
     
     # DONE: Add a TimeDistributed(Dense(output_dim)) layer
     time_dense = TimeDistributed(Dense(output_dim))(batch_layer)
