@@ -1,7 +1,7 @@
 from keras import backend as K
 from keras.models import Model
-from keras.layers import (BatchNormalization, Conv1D, Dense, Input, 
-    TimeDistributed, Activation, Bidirectional, SimpleRNN, GRU, LSTM)
+from keras.layers import (BatchNormalization, Conv1D, Dense, Input,
+                          TimeDistributed, Activation, Bidirectional, SimpleRNN, GRU, LSTM)
 
 
 def simple_rnn_model(input_dim, output_dim=29):
@@ -10,7 +10,8 @@ def simple_rnn_model(input_dim, output_dim=29):
     # Main acoustic input
     input_data = Input(name='the_input', shape=(None, input_dim))
     # Add recurrent layer
-    simp_rnn = GRU(output_dim, return_sequences=True, implementation=2, name='rnn')(input_data)
+    simp_rnn = GRU(output_dim, return_sequences=True,
+                   implementation=2, name='rnn')(input_data)
     # Add softmax activation layer
     y_pred = Activation('softmax', name='softmax')(simp_rnn)
     # Specify the model
@@ -27,9 +28,9 @@ def rnn_model(input_dim, units, activation, output_dim=29):
     input_data = Input(name='the_input', shape=(None, input_dim))
     # Add recurrent layer
     rnn_layer = GRU(units, activation=activation,
-        return_sequences=True, implementation=2, name='rnn')(input_data)
+                    return_sequences=True, implementation=2, name='rnn')(input_data)
 
-    # DONE: Add batch normalization 
+    # DONE: Add batch normalization
     bn_rnn = BatchNormalization(name='bn_rnn_1d')(rnn_layer)
 
     # DONE: Add a TimeDistributed(Dense(output_dim)) layer
@@ -45,14 +46,14 @@ def rnn_model(input_dim, units, activation, output_dim=29):
 
 
 def cnn_rnn_model(input_dim, filters, kernel_size, conv_stride,
-    conv_border_mode, units, output_dim=29):
+                  conv_border_mode, units, output_dim=29):
     """ Build a recurrent + convolutional network for speech 
     """
     # Main acoustic input
     input_data = Input(name='the_input', shape=(None, input_dim))
     # Add convolutional layer
-    conv_1d = Conv1D(filters, kernel_size, 
-                     strides=conv_stride, 
+    conv_1d = Conv1D(filters, kernel_size,
+                     strides=conv_stride,
                      padding=conv_border_mode,
                      activation='relu',
                      name='conv1d')(input_data)
@@ -60,7 +61,7 @@ def cnn_rnn_model(input_dim, filters, kernel_size, conv_stride,
     bn_cnn = BatchNormalization(name='bn_conv_1d')(conv_1d)
     # Add a recurrent layer
     simp_rnn = SimpleRNN(units, activation='relu',
-        return_sequences=True, implementation=2, name='rnn')(bn_cnn)
+                         return_sequences=True, implementation=2, name='rnn')(bn_cnn)
 
     # DONE: Add batch normalization
     bn_rnn = BatchNormalization(name='bn_rnn_1d')(simp_rnn)
@@ -79,7 +80,7 @@ def cnn_rnn_model(input_dim, filters, kernel_size, conv_stride,
 
 
 def cnn_output_length(input_length, filter_size, border_mode, stride,
-                       dilation=1):
+                      dilation=1):
     """ Compute the length of the output sequence after 1D convolution along
         time. Note that this function is in line with the function used in
         Convolution1D class from Keras.
@@ -110,23 +111,16 @@ def deep_rnn_model(input_dim, units, recur_layers, output_dim=29):
     # DONE: Add recurrent layers, each with batch normalization
     activation = 'relu'
     return_sequences = True
+    implementation = 2
 
-    layer = LSTM(units, activation=activation, return_sequences=return_sequences)(input_data)
-    name = 'bn_rnn_1d'
-    batch_layer = BatchNormalization(name=name)(layer)
+    layer = GRU(units, activation=activation,
+                 return_sequences=return_sequences, name='gru1', implementation=implementation)(input_data)
+    batch_layer = BatchNormalization(name='bn_rnn_1d')(layer)
 
-    if recur_layers != 1:
-        # Run through each of the many layers
-        for i in range(recur_layers - 2):
-            layer = LSTM(units, return_sequences=return_sequences, activation=activation)(batch_layer)
-            name = 'bn_rnn_{}'.format(i + 2)
-            batch_layer = BatchNormalization(name=name)(layer)
-        
-        # Now let's process the final layer separately
-        layer = LSTM(units, return_sequences=return_sequences, activation=activation)(batch_layer)
-        name = 'bn_rnn_last_rnn'
-        batch_layer = BatchNormalization(name=name)(layer)
-    
+    layer = GRU(units, activation=activation,
+                return_sequences=return_sequences, name='gru2', implementation=implementation)(batch_layer)
+    batch_layer = BatchNormalization(name='bn_rnn_2d')(layer)
+
     # DONE: Add a TimeDistributed(Dense(output_dim)) layer
     time_dense = TimeDistributed(Dense(output_dim))(batch_layer)
 
@@ -149,9 +143,11 @@ def bidirectional_rnn_model(input_dim, units, output_dim=29):
     return_sequences = True
     activation = 'relu'
     merge_mode = 'concat'
+    implementation = 2
 
-    lstm = LSTM(units, activation=activation, return_sequences=return_sequences)
-    bidir_rnn = Bidirectional(lstm, merge_mode=merge_mode)(input_data)
+    gru = GRU(units, activation=activation,
+              return_sequences=return_sequences, implementation=implementation)
+    bidir_rnn = Bidirectional(gru, merge_mode=merge_mode)(input_data)
 
     # DONE: Add a TimeDistributed(Dense(output_dim)) layer
     time_dense = TimeDistributed(Dense(output_dim))(bidir_rnn)
