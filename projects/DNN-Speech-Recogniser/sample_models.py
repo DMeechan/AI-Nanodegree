@@ -128,7 +128,7 @@ def deep_rnn_model(input_dim, units, recur_layers, output_dim=29):
         batch_layer = BatchNormalization(name=name)
     
     # DONE: Add a TimeDistributed(Dense(output_dim)) layer
-    time_dense = TimeDistributed(Dense(output_dim))(layer)
+    time_dense = TimeDistributed(Dense(output_dim))(batch_layer)
 
     # Add softmax activation layer
     y_pred = Activation('softmax', name='softmax')(time_dense)
@@ -151,7 +151,7 @@ def bidirectional_rnn_model(input_dim, units, output_dim=29):
     merge_mode = 'concat'
 
     lstm = LSTM(units, activation=activation, return_sequences=return_sequences)
-    bidir_rnn = Bidirectional(lstm, merge_mode)(input_data)
+    bidir_rnn = Bidirectional(lstm, merge_mode=merge_mode)(input_data)
 
     # DONE: Add a TimeDistributed(Dense(output_dim)) layer
     time_dense = TimeDistributed(Dense(output_dim))(bidir_rnn)
