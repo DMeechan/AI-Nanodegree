@@ -179,8 +179,10 @@ def final_model(input_dim=161, output_dim=29, filters=200, kernel_size=11, conv_
     merge_mode = 'concat'
 
     # Set up GRU to be used later in the bidirectional layers
-    gru = GRU(units, activation=activation,
-              return_sequences=return_sequences, implementation=implementation)
+    gru1 = GRU(units, activation=activation,
+              return_sequences=return_sequences, implementation=implementation, dropout=0.15)
+    gru2 = GRU(units, activation=activation,
+              return_sequences=return_sequences, implementation=implementation, dropout=0.25)
 
     # Add first layer: convolutional
     conv_1d = Conv1D(filters, kernel_size, strides=conv_stride,
@@ -190,12 +192,18 @@ def final_model(input_dim=161, output_dim=29, filters=200, kernel_size=11, conv_
     bn_cnn = BatchNormalization(name='bn_conv_1d')(conv_1d)
 
     # Bidirectional recurrent layer
-    bidir_rnn_1 = Bidirectional(gru, merge_mode=merge_mode)(bn_cnn)
+    bidir_rnn_1 = Bidirectional(gru1, merge_mode=merge_mode)(bn_cnn)
+
+    # Batch normalization
+    bn_bidir_1 = BatchNormalization(name='bn_bidir_1')(bidir_rnn_1)
 
     # Second bidirectional recurrent layer (deep)
-    bidir_rnn_2 = Bidirectional(gru, merge_mode=merge_mode)(bidir_rnn_1)
+    bidir_rnn_2 = Bidirectional(gru2, merge_mode=merge_mode)(bn_bidir_1)
 
-    time_dense = TimeDistributed(Dense(output_dim))(bidir_rnn_2)
+    # Batch normalization
+    bn_bidir_2 = BatchNormalization(name='bn_bidir_2')(bidir_rnn_2)
+
+    time_dense = TimeDistributed(Dense(output_dim))(bn_bidir_2)
 
     # DONE: Add softmax activation layer
     y_pred = Activation('softmax', name='softmax')(time_dense)
