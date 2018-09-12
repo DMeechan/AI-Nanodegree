@@ -10,8 +10,8 @@ Foundations of AI - Term 1 Projects:
 
 Deep Learning & Applications - Term 2 Projects:
 
-1. [X] Dog Breed Classifier
-2. [X] Time Series Prediction and Text Generation
-3. [ ] Voice user interfaces
+1. [X] [Dog Breed Classifier](https://github.com/DMeechan/AI-Nanodegree/tree/master/projects/Dog-Breed-AI) - Create a Convolutional Neural Network (CNN) to classify a dog's breed from a photo
+2. [X] [Time Series Prediction and Text Generation](https://github.com/DMeechan/AI-Nanodegree/tree/master/projects/Recurrent-Neural-Network) - Create a Recurrent Neural Network (RNN) to predict future values in a time series and generate text
+3. [X] [Speech recognition](https://github.com/DMeechan/AI-Nanodegree/tree/master/projects/DNN-Speech-Recogniser) - Build a Deep Neural Network (DNN) to perform automatic speech recognition
 
 **Please visit the project folders to learn more about them!**
